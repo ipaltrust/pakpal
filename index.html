@@ -112,6 +112,13 @@ nav{padding:0 10px calc(10px + env(safe-area-inset-bottom));border-top:1px solid
   .stage::before,.stage::after,.portrait img,.swap{animation:none}
 }
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (max-width:899px){
+  .chip{min-height:34px;padding:0 13px;font-size:12px}
+  .socials{gap:6px;margin-top:12px}
+  .card--lg{min-height:128px;padding:16px}
+  main{padding-bottom:18px}
+}
+.rail{min-height:max-content}
 </style>
 </head>
 <body>
@@ -350,6 +357,7 @@ function show(key, push=true){
   }
   $("#panel").scrollTop = 0;
   if (push) history.replaceState(null,"","#"+key);
+  requestAnimationFrame(fit);
 }
 
 // jeda saat disentuh
@@ -357,6 +365,16 @@ const rail = $("#rail"); let t;
 rail.addEventListener("pointerdown", () => { clearTimeout(t); rail.classList.add("is-paused"); });
 ["pointerup","pointercancel"].forEach(ev => rail.addEventListener(ev, () => { t = setTimeout(()=>rail.classList.remove("is-paused"), 2500); }));
 
+/* Muat pas di layar HP: foto menyusut otomatis sampai carousel tidak tertutup menu bawah */
+function fit() {
+  const p = document.querySelector(".portrait"), m = $("#panel");
+  if (matchMedia("(min-width:900px)").matches) { p.style.height = ""; return; }
+  let h = Math.min(300, Math.round(innerHeight * 0.27));
+  p.style.height = h + "px";
+  while (m.scrollHeight > m.clientHeight + 1 && h > 96) { h -= 6; p.style.height = h + "px"; }
+}
+addEventListener("resize", fit);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
 addEventListener("hashchange", () => show(location.hash.slice(1), false));
 show(location.hash.slice(1) || "nama", false);
 </script>
