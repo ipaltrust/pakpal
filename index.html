@@ -63,6 +63,9 @@ main{overflow-y:auto;overflow-x:hidden;padding:6px 0 14px;display:grid;align-con
 h1{margin-top:14px;font-family:var(--display);font-weight:800;font-size:clamp(2.7rem,12vw,5.4rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em}
 .sub{display:block;margin-top:8px;font-family:var(--body);font-weight:800;font-size:clamp(1.3rem,6.2vw,2.3rem);line-height:1.05;color:var(--accent);letter-spacing:-.005em}
 .desc{margin-top:14px;font-size:clamp(1rem,4vw,1.2rem);line-height:1.5;max-width:34em}
+.socials{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:700;transition:border-color .15s,color .15s}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
 .swap{animation:swapIn .45s ease both}
 @keyframes swapIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
@@ -129,6 +132,7 @@ nav{padding:0 10px calc(10px + env(safe-area-inset-bottom));border-top:1px solid
       <span class="pill" id="pill"></span>
       <h1 id="title"></h1>
       <p class="desc" id="desc"></p>
+      <div class="socials" id="socials"></div>
     </section>
     <section class="rail" id="rail" aria-label="Data"><div class="track" id="track"></div></section>
   </main>
@@ -164,6 +168,15 @@ const ICONS = {
   book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z"/><path d="M4 19a2 2 0 0 1 2-2h13"/>'
 };
 const svg = (k, cls="") => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[k]}</svg>`;
+
+/* TAUTAN SOSIAL: isi alamat lengkap; yang dikosongkan tidak tampil. */
+const SOCIAL = {
+  linkedin:"https://www.linkedin.com/in/paljariatiyusral",
+  threads:"https://www.threads.com/paljariatiyusral",
+  tiktok:"https://www.tiktok.com/@pakpalvaluelab",
+  youtube:"https://youtube.com/@PakPalValueLab",
+  instagram:"", facebook:"", x:"", telegram:"", website:"", email:""
+};
 
 const DATA = {
   nama: {
@@ -270,6 +283,19 @@ if (SITE.videoSrc) {
 }
 
 // bangun menu tab
+const SOCIAL_LABEL = {instagram:"Instagram",tiktok:"TikTok",youtube:"YouTube",facebook:"Facebook",linkedin:"LinkedIn",threads:"Threads",x:"X",telegram:"Telegram",website:"Website",email:"Email"};
+(function () {
+  const attr = s => String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+  const box = $("#socials");
+  const chips = Object.keys(SOCIAL_LABEL).map(k => {
+    let v = String(SOCIAL[k] || "").trim(); if (!v) return "";
+    if (k === "email" && !/^mailto:/.test(v)) v = "mailto:" + v;
+    if (!/^(https?:|mailto:)/.test(v)) return "";
+    return `<a class="chip" href="${attr(v)}" target="_blank" rel="noopener noreferrer">${SOCIAL_LABEL[k]}</a>`;
+  }).join("");
+  if (chips) box.innerHTML = chips; else box.remove();
+})();
+
 const tabsEl = $("#tabs");
 order.forEach(k => {
   const b = document.createElement("button");
