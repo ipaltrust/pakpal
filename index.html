@@ -249,7 +249,7 @@ const DATA = {
       {tag:"Buku", title:"Orchestrative Leadership", meta:"Kerangka kepemimpinan yang memadukan nilai dan strategi, lengkap dengan panduan fasilitator."},
       {tag:"Buku", title:"Guru Lega", meta:"Program pengembangan profesi guru, dari buku hingga alat bantu mengajar."},
       {tag:"Modul", title:"Peta Jalan Claude 100 Langkah", meta:"Modul belajar mandiri literasi AI di bawah program Cakap AI."},
-      {tag:"Aplikasi", title:"Trustco Human Map", meta:"Prototipe refleksi diri berbasis filosofi KHAS."}
+      {tag:"Aplikasi", title:"Trustco Human Map", meta:"Prototipe refleksi diri berbasis filosofi KHAS.", wa:true}
     ]
   },
   produk: {
@@ -317,7 +317,7 @@ const cardHTML = (d, c) => {
   if (Array.isArray(c))
     return `<div class="card card--sm"><span class="card__icon">${svg(c[0])}</span><span><span class="card__label">${c[1]}</span><span class="card__value">${c[2]}</span></span></div>`;
   const inner = `<span class="tag">${c.tag}</span><h3>${c.title}</h3><p>${c.meta}</p>`;
-  if (d.order) {
+  if (d.order || c.wa) {
     const href = waLink(`Assalamu'alaikum Pak Pal 👋 Saya tertarik dengan ${c.title}. Boleh dijelaskan lebih lanjut?`);
     return `<a class="card card--lg" href="${href}" target="_blank" rel="noopener noreferrer">${inner}<span class="go">Tanya via WhatsApp →</span></a>`;
   }
